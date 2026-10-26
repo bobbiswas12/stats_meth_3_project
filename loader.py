@@ -46,17 +46,15 @@ def load_data(file_path):
         for row in reader:
             features = []
             for col in reader.fieldnames:
-                if col not in explanatory_var_excluded and row[col] != "N/A":
-                    features.append(row[col])
-                elif col not in explanatory_var_excluded and row[col] == "N/A":
+                if col not in explanatory_var_excluded and row[col] not in ("N/A" , ""):
+                    features.append(float(row[col]))
+                elif col not in explanatory_var_excluded and row[col] in ("N/A",""):
                     features.append(mean_X[col])
             X.append(features)
             Y.append(row['stroke'])
         X = np.array(X)
         X_1 = np.ones((no_of_entries,1))
         X = np.concatenate((X_1,X), axis = 1)
-        Y = np.array(Y)
-        
-    return X,Y
+        Y = np.array(Y,dtype=float)
 
-load_data("datasets/healthcare-dataset-stroke-data.csv")
+    return X,Y
