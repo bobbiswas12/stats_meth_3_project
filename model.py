@@ -4,7 +4,7 @@ import numpy as np
 import math
 from loader import load_data
 
-X,Y = load_data("datasets/healthcare-dataset-stroke-data.csv")
+X,Y,columns = load_data("datasets/healthcare-dataset-stroke-data.csv")
 
 # the sigmoid function --->
 def sigmoidf(x):
@@ -35,8 +35,6 @@ epsilon = 1e-3
 
 def IRLS(B):
 
-    l_old = log_likelihood(X, Y, B)
-
     while True:
 
         B_old = np.copy(B)
@@ -58,14 +56,10 @@ def IRLS(B):
 
         B = B_old + np.linalg.solve(H, g)
 
-        l_new = log_likelihood(X, Y, B)
-
         # checking convergence ->
-        if abs(l_new - l_old) < epsilon:
+        if abs(np.linalg.norm(B - B_old)) < epsilon:
             return B
 
         B_old = np.copy(B)
-        l_old = l_new
 
 B = IRLS(B)
-print(B)
