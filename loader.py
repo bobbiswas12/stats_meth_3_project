@@ -27,6 +27,8 @@ def load_data(file_path):
 
         #calculating the mean-values ->
         no_of_entries = 0
+        no_of_smokers = 0
+        age_of_smokers = 0
         for row in reader:
             for col in reader.fieldnames:
                 if col in categorical_var:
@@ -37,9 +39,14 @@ def load_data(file_path):
                 elif col not in explanatory_var_excluded  and row[col] != "N/A":
                     value = row[col]
                     mean_X[col] += float(value)
+            if row["smoking_status"] == "smokes":
+                no_of_smokers +=1
+                age_of_smokers += float(row["age"])
             no_of_entries+=1
 
-        #print(mean_X)
+        print(mean_X)
+        print(no_of_smokers)
+        print(age_of_smokers)
         for col in reader.fieldnames:
             if col not in explanatory_var_excluded:
                 mean_X[col] /= no_of_entries
@@ -53,6 +60,7 @@ def load_data(file_path):
             
         X = []
         Y = []
+        no_of_strokes = 0
         for row in reader:
             features = []
             for col in reader.fieldnames:
@@ -71,6 +79,8 @@ def load_data(file_path):
         X_1 = np.ones((no_of_entries,1))
         X = np.concatenate((X_1,X), axis = 1)
         Y = np.array(Y,dtype=float)
-        
+        for i in reference_values:
+            print(i,end=" ")
+        print("\n")
     return X,Y,columns
 
